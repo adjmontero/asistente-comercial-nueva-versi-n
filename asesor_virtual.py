@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 
@@ -9,8 +10,8 @@ st.title("🧥 Asistente Virtual Comercial - Prueba de Concepto")
 def cargar_datos():
     xls = pd.ExcelFile("Base_Asistente_Imagenes_Estructuradas.xlsx")
 
-    # Mostrar qué hojas tiene el archivo (debug)
-    st.write("🧾 Hojas disponibles en el archivo Excel:", xls.sheet_names)
+    # (Opcional) Mostrar hojas para debug:
+    # st.write("🧾 Hojas disponibles en el archivo Excel:", xls.sheet_names)
 
     avatares_df = pd.read_excel(xls, sheet_name="Avatares")
     prendas_df = pd.read_excel(xls, sheet_name="Prendas")
@@ -32,8 +33,8 @@ if email:
         st.markdown("¿Qué estás buscando hoy? Elige entre nuestras prendas disponibles:")
         
         for _, prenda in prendas_df.iterrows():
-            st.markdown(f"**{prenda['Nombre']}**")
-            st.image(prenda["URL Imagen"], width=250)
+            st.markdown(f"**{prenda['Descripción']}**")
+            st.image(prenda["URL Imgur"], width=250)
 
         st.markdown("🔜 En futuras versiones podrás verte con estas prendas directamente sobre tu avatar.")
     else:
