@@ -2,7 +2,8 @@
 import streamlit as st
 import pandas as pd
 
-# Título
+st.set_page_config(page_title="Asistente Virtual Comercial", page_icon="🧥")
+
 st.title("🧥 Asistente Virtual Comercial - Prueba de Concepto")
 
 # Cargar datos desde el Excel
@@ -13,27 +14,36 @@ def cargar_datos():
     prendas_df = pd.read_excel(xls, sheet_name="Prendas")
     return avatares_df, prendas_df
 
-# Ejecutar la carga de datos
 avatares_df, prendas_df = cargar_datos()
 
-# Campo para email
+# Input para email
 email = st.text_input("📧 Introduce tu correo electrónico para comenzar").strip().lower()
 
 if email:
     cliente = avatares_df[avatares_df["Email"].str.lower() == email]
+
     if not cliente.empty:
         nombre = cliente.iloc[0]["Nombre"]
         ciudad = cliente.iloc[0]["Ciudad"]
-        estilo = cliente.iloc[0]["Estilo"]
-        ultima_compra = cliente.iloc[0]["Última compra"]
+        estilo = cliente.iloc[0]["Estilo preferido"]
+        ultima_compra = cliente.iloc[0]["Artículo comprado"]
+
         st.markdown(f"### 👋 ¡Qué alegría verte por aquí otra vez, {nombre}!")
-        st.markdown(f"Veo que estás en **{ciudad}**, tu estilo favorito es **{estilo}** y la última vez te llevaste una **{ultima_compra}**. 😎")
+        st.write(f"Veo que estás en **{ciudad}**, tu estilo favorito es **{estilo}** y la última vez te llevaste un artículo como este: **{ultima_compra}** 💫")
 
-        st.markdown("¿Qué estás buscando hoy? Elige entre nuestras prendas disponibles:")
-        for _, prenda in prendas_df.iterrows():
+        st.markdown("¿Qué estás buscando hoy? ¿Es para una ocasión especial o simplemente para renovar tu clóset? 👗👕")
+
+        st.markdown("Mientras me lo cuentas, aquí te dejo algunas sugerencias que combinan con tu estilo:")
+
+        recomendaciones = prendas_df[prendas_df["Estilo"].str.lower() == estilo.lower()]
+        if recomendaciones.empty:
+            recomendaciones = prendas_df.sample(5)
+
+        for _, prenda in recomendaciones.iterrows():
             st.markdown(f"**{prenda['Descripción']}**")
-            st.image(prenda["URL imgur"], width=250)
+            st.markdown(f"➡️ [Ver imagen]({prenda['URL imgur']})")
 
-        st.markdown("🧵 ¿Te gustaría que te reserve alguna para el probador?")
+        st.markdown("¿Te gustaría que te reserve alguna para que la tengas lista en el probador? 😉")
+
     else:
         st.warning("No encontramos tu email en la base de datos. ¿Te gustaría registrarte?")
