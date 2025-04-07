@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 
@@ -13,24 +12,29 @@ def cargar_datos():
     prendas_df = pd.read_excel(xls, sheet_name="Prendas")
     return avatares_df, prendas_df
 
-# Ejecutar la carga de datos
+# Ejecutar la carga
 avatares_df, prendas_df = cargar_datos()
 
-# Campo para email
+# Input del cliente
 email = st.text_input("📧 Introduce tu correo electrónico para comenzar").strip().lower()
 
 if email:
     cliente = avatares_df[avatares_df["Email"].str.lower() == email]
+
     if not cliente.empty:
         nombre = cliente.iloc[0]["Nombre"]
         st.markdown(f"### 👋 ¡Qué alegría verte por aquí otra vez, {nombre}!")
-
         st.markdown("¿Qué estás buscando hoy? Elige entre nuestras prendas disponibles:")
-        
-        for _, prenda in prendas_df.iterrows():
-            st.markdown(f"**{prenda['Descripción']}**")
-            st.image(prenda["URL_imgur"], width=250)
 
-        st.markdown("🔜 En futuras versiones podrás verte con estas prendas directamente sobre tu avatar.")
+        for _, prenda in prendas_df.iterrows():
+            nombre_prenda = prenda.get("Descripción", "Prenda sin nombre")
+            imagen_url = prenda.get("URL Imgur", None)
+
+            st.markdown(f"**{nombre_prenda}**")
+            if imagen_url:
+                st.image(imagen_url, width=250)
+
+        st.markdown("🔜 Muy pronto podrás ver cómo te queda directamente sobre tu avatar 😉")
+
     else:
         st.warning("No encontramos tu email en la base de datos. ¿Te gustaría registrarte?")
