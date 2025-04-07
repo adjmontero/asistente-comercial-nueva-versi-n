@@ -9,13 +9,8 @@ st.title("🧥 Asistente Virtual Comercial - Prueba de Concepto")
 @st.cache_data
 def cargar_datos():
     xls = pd.ExcelFile("Base_Asistente_Imagenes_Estructuradas.xlsx")
-
-    # (Opcional) Mostrar hojas para debug:
-    # st.write("🧾 Hojas disponibles en el archivo Excel:", xls.sheet_names)
-
     avatares_df = pd.read_excel(xls, sheet_name="Avatares")
     prendas_df = pd.read_excel(xls, sheet_name="Prendas")
-
     return avatares_df, prendas_df
 
 # Ejecutar la carga de datos
@@ -34,7 +29,7 @@ if email:
         
         for _, prenda in prendas_df.iterrows():
             st.markdown(f"**{prenda['Descripción']}**")
-            st.image(prenda["URL Imgur"], width=250)
+            st.image(prenda["URL_imgur"], width=250)
 
         st.markdown("🔜 En futuras versiones podrás verte con estas prendas directamente sobre tu avatar.")
     else:
